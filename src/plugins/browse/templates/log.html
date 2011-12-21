@@ -1,0 +1,58 @@
+{% extends "setting.html" %}
+
+{% block content %}
+<br>
+<div class='confsection'>
+  <div id='text'>
+    <div id='title'>
+    Download Log	
+    </div>
+  </div>
+</div>
+<div class='confbox'>
+  <div id='confText'>
+    <div id='title_med'>
+    Log Files
+    </div>
+  </div>
+  <div style="float:right;">
+	{% for log in log_files %}
+        <span class="button" style="margin-right:10px;float:left;"><a href="log">{{ log }}</a></span>
+    {% endfor %}
+  </div>
+
+</div>
+<br>
+<div class='confsection'>
+  <div id='confText'>
+    <div id='title'>
+    Log	
+    </div>
+  </div>
+  <div style="float:right;">
+    <ul id='submenu'>
+        {% for log in log_files reversed %}
+            {% if log == target_log %}
+            <li class="subactive">{{ log|capfirst }}</li>
+            {% else %}
+            <li><a href="log_{{ log }}">{{ log|capfirst }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+  </div>
+</div>
+<div id='log'>
+	{% for line in log %}
+		{% for key, value in color_tag.items %}
+			{% if key in line %}
+			<font color="{{ value }}">
+	        {{ line }}<hr/>
+			</font>
+			{% endif %}
+		{% endfor %}
+    {% empty %}
+       Sorry, There is no log to display 
+	{% endfor %}
+</div>
+<br>
+{% endblock %}

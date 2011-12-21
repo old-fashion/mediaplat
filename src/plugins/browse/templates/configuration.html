@@ -1,0 +1,26 @@
+{% extends "setting.html" %}
+
+{% block content %}
+    {% for section, options in settings.items %}
+        <br>
+        <div class='confsection'>
+          <div id='text'>
+            <div id='title'> {{ section }} </div>
+          </div>
+        </div>
+        {% for option, value, desc in options %}
+            <div class='confbox'>
+              <div id='confText'>
+                <div id='title_med'> {{ option }} </div>
+                <div id='desc'> {{ desc|capfirst }} </div>
+              </div>
+              <form action="/browse/configuration" method="post">{% csrf_token %}
+                <input type="text"   name="{{ option }}" class="confInput" value="{{ value }}" />
+                <input type="hidden" name="section" value="{{ section }}" />
+                <input type="hidden" name="option"  value="{{ option }}" />
+                <span class="button"><input type="submit" value="Apply" /></span>
+              </form>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

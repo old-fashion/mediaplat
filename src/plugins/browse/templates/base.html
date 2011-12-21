@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta content='text/html;charset=UTF-8' http-equiv='Content-type'>
+    <!-- <link href='/favicon.ico' rel='shortcut icon'> -->
+    <title>{% block title %}{% endblock %}</title>
+    <link href="site_media/style.css" media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="site_media/javascripts/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="site_media/javascripts/wipetouch/jquery.wipetouch.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+            $('#bodyPanel').wipetouch(
+            { 
+               preventDefault: false,
+               wipeLeft: function(result) { window.location="{{ cur_menu }}?id={{ self.uid }}&page={% if page_range and cur_page|add:1 < page_range|length %}{{cur_page|add:1}}{% else %}{{cur_page}}{% endif %}";},
+               wipeRight: function(result) { window.location="{{ cur_menu }}?id={{ self.uid }}&page={% if page_range and cur_page > 0 %}{{cur_page|add:-1}}{% else %}{{cur_page}}{% endif %}";},
+            });
+    });
+    </script>
+    {% block header %}{% endblock %}
+</head>
+<body>
+    <div id='page'>
+    <div id='headerPanel'>
+    <!-- Menu Panel -->
+    <a href='browse'><img src='site_media/images/logo.png' title='mediaplat'></a>
+    <ul id='menubar'>
+    {% for menu in menu_list %}
+        {% if menu == cur_menu %}
+        <li class="active">{{ menu|capfirst }}</li>
+        {% else %}
+        <li><a href="{{ menu }}">{{ menu|capfirst }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+    </div>
+
+    <!-- Status Panel -->
+    <div id='statusPanel'>
+        <div id='progress'>
+            {% block progress %}{% endblock %}
+        </div>
+        {% block status %}{% endblock %}
+    </div>
+    <!-- Menu Panel -->
+    <div id='bodyPanel'>
+    {% block content %}{% endblock %}
+    </div>
+    <div id='footerPanel'>
+        <div id='navi'>
+        {% for i in page_range %}
+            {% if i == cur_page %}
+            <img src='site_media/images/dot2.png' width=10px height=10px>
+            {% else %}
+            <a href="{{ cur_menu }}?id={{ self.uid }}&page={{ i }}"><img src='site_media/images/dot.png' width=10px height=10px></a>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <div id='navi'>
+		{{ items }}
+        </div>
+    </div>
+    </div>
+</body>
+</html>

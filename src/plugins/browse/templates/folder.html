@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} mediaplat {% endblock %}
+
+{% block progress %}
+<img src='site_media/images/progress.gif' width=18px height=18px style="verticalAlign=text-top;">
+{% endblock %}
+
+{% block status %}
+  <div id='path'>
+  {% for id, name in parents %}<a href="folder?id={{ id }}">{{ name }}</a>/{% endfor %}
+  </div>
+{% endblock %}
+
+{% block content %}
+    {% if id != "ROOT" %}
+  	  {% include "folder_up.html" %}
+	{% else %}
+	<br>
+	{% endif %}
+
+    {% for row in rows %}
+  	  {% include "folder_item.html" %}
+	{% endfor %}
+{% endblock %}
+

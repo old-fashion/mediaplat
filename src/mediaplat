@@ -1,0 +1,263 @@
+#!/bin/bash 
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="MediaPlat server"
+NAME=mediaplat
+PIDFILE=/var/run/mediaplat/$NAME.pid
+
+UWSGI_DAEMON=/usr/bin/uwsgi
+UWSGI_ARGS="--ini /etc/mediaplat/uwsgi.ini"
+
+red='\e[0;31m'
+RED='\e[1;31m'
+blue='\e[0;34m'
+BLUE='\e[1;34m'
+cyan='\e[0;36m'
+CYAN='\e[1;36m'
+NC='\e[0m' # No Color
+
+export LANG=en_US.UTF-8
+
+mediaplat_start() {
+  init
+
+  # start postgresql
+  log -n "[1] PostgreSQL Start ..."
+  pg_ctlcluster 9.1 main start >/dev/null 2>&1
+  case "$?" in
+    "0")	log result "OK" ;;
+	"2")	log result "RUNNING" ;;
+	"1")	log result "FAIL" ;;
+  esac
+
+  # start uwsgi
+  log -n "[2] uWSGI Start ... "
+  if [ ! -z "$(pgrep uwsgi)" ]; then
+    log result "RUNNING" 
+  else 
+    start-stop-daemon --start --quiet --nicelevel -5 --exec $UWSGI_DAEMON -- $UWSGI_ARGS >/dev/null 2>&1
+    [ "$?" = 0 ] && log result "OK" || log result "FAIL"
+  fi
+
+  # start uwsgi
+  log -n "[3] NGiNX  Start ... "
+  if [ ! -z "$(pgrep nginx)" ]; then
+    log result "RUNNING" 
+  else
+    nginx
+    [ "$?" = 0 ] && log result "OK" || log result "FAIL"
+  fi
+
+  # start mediaplat.py
+  log -n "[4] MediaPlat  Start $@ ... "
+  if [ ! -z "$(pgrep mediaplatd)" ]; then
+    log result "RUNNING" 
+  else
+    /usr/lib/mediaplat/mediaplat.py $@ >/dev/null 2>&1 & 
+    [ "$?" = 0 ] && log result "OK" || log result "FAIL"
+  fi
+}
+
+mediaplat_stop() {
+
+  # stop mediaplatd
+  log -n "[1] MediaPlat Stop ... "
+  if [ -z "$(pgrep mediaplatd)" ]; then
+    log result "NOTRUNNING" 
+  else 
+    start-stop-daemon --stop --quiet --retry=INT/5/KILL/5 --name mediaplatd
+    [ "$?" = 0 ] && log result "OK" || log result "FAIL"
+  fi
+
+  # stop nginx
+  log -n "[2] NGiNX  Stop ... "
+  if [ -z "$(pgrep nginx)" ]; then
+    log result "NOTRUNNING" 
+  else
+    nginx -s stop 
+    [ "$?" = 0 ] && log result "OK" || log result "FAIL"
+  fi
+
+  # stop uwsgi
+  log -n "[3] uWSGI Stop ... "
+  if [ -z "$(pgrep uwsgi)" ]; then
+    log result "NOTRUNNING" 
+  else 
+    start-stop-daemon --stop --quiet --retry=INT/5/KILL/5 --name $(basename $UWSGI_DAEMON)
+    [ "$?" = 0 ] && log result "OK" || log result "FAIL"
+  fi
+
+  # stop postgresql
+  log -n "[4] PostgreSQL Stop ..."
+  pg_ctlcluster --force 9.1 main stop >/dev/null 2>&1
+  case "$?" in
+    "0")	log result "OK" ;;
+	"2")	log result "NOTRUNNING" ;;
+	"1")	log result "FAIL" ;;
+  esac
+}
+
+mediaplat_reload() {
+  log -n "[1] uWSGI Reload ... "
+  pkill -SIGHUP uwsgi
+  case "$?" in
+    "0")	log result "OK" ;;
+	"1")	log result "FAIL" ;;
+  esac
+
+  log -n "[2] Mediaplat Reload ... "
+  
+}
+
+mediaplat_rebuild() {
+  mediaplat_start --rebuild
+}
+
+# $1: mediaplat url
+update() {
+  if [ -z "$1" ]; then
+    log "${RED}*${NC} Local Update ..."
+	if [ "$(basename $(pwd))" != "src" ]; then
+	  log "'$(pwd)' is not a source directory"
+	  exit 1
+	fi
+	cp -a ./*.py /usr/lib/mediaplat
+	cp -a ./plugins /var/lib/mediaplat
+	touch /var/run/mediaplat/uwsgi_reload
+  else 
+    log "${RED}*${NC} Remote Update ..."
+    log "[1] Update mediaplat from $1"
+    rm -rf /tmp/mediaplat >/dev/null 2>&1
+    mkdir -p /tmp/mediaplat
+    UPDATE=/tmp/mediaplat/update.tar.bz2
+
+    log "[2] Download $1..."
+    wget "$1" -O $UPDATE >/dev/null 2>&1
+    [ "$?" != 0 ] && return
+
+    log "[3] Untar $1..."
+    tar xf $UPDATE -C /
+  fi
+}
+
+log() {
+  if [ "$1" = "result" ] && [ ! -z "$2" ]; then
+	case "$2" in 
+	  "OK")			echo -e " ${CYAN}OK${NC}" ;;
+	  "FAIL")		echo -e " ${RED}Fail${NC}" ;;
+	  "RUNNING")	echo -e " ${BLUE}Already Running${NC}" ;;
+	  "NOTRUNNING")	echo -e " ${BLUE}Not Running${NC}" ;;
+	esac
+  else
+    echo -e $@
+  fi
+}
+
+init() {
+  if [ ! -d "/var/lib/postgresql/9.1/main" ]; then
+    log "[0] Initializing ..."
+  fi
+
+  # STEP 1: create database and user if not exist
+  if ! getent passwd postgres > /dev/null; then
+    adduser --system --quiet --home /var/lib/postgresql --no-create-home \
+            --shell /bin/bash --group --gecos "PostgreSQL administrator" postgres
+  fi
+
+  mkdir -p /var/run/postgresql
+  mkdir -p /var/run/mediaplat
+  chown root:postgres /var/log/postgresql
+  rm -f /var/run/mediaplat/mediaplat_sock >/dev/null 2>&1
+
+  chown postgres:postgres /var/lib/postgresql
+  chmod 1775 /var/log/postgresql
+  chown postgres:postgres /var/run/postgresql
+
+  if [ ! -d "/var/lib/postgresql/9.1/main" ]; then
+    pgrep postgres >/dev/null 2>&1
+	[ "$?" = 0 ] && pkill -9 postgres
+
+    pg_createcluster -e UTF-8 9.1 main
+	cp -f /etc/mediaplat/pg_hba.conf.default /etc/postgresql/9.1/main/pg_hba.conf
+	cp -f /etc/mediaplat/postgresql.conf.default /etc/postgresql/9.1/main/postgresql.conf
+  fi
+}
+
+monitor() {
+  LOG1=/var/log/postgresql/postgresql-9.1-main.log
+  LOG2=/var/log/nginx/nginx.log
+  LOG3=/var/log/mediaplat/mediaplat.log
+  WCOUNT=3
+
+  mkdir -p $(dirname $LOG1) $(dirname $LOG2) $(dirname $LOG3)
+  touch $LOG1 $LOG2 $LOG3
+
+  TEMP_FILE=/var/run/screeen.size
+  dialog --print-maxsize 2> $TEMP_FILE
+  HEIGHT=$(cat $TEMP_FILE | cut -d " " -f 2 | tr -d ",")
+  WIDTH=$(cat $TEMP_FILE | cut -d " " -f 3)
+  HEIGHT_ONE=$(expr $HEIGHT / $WCOUNT - 1)
+  WIDTH_ONE=$(expr $WIDTH - 2)
+
+  dialog \
+    --begin 1 1 --no-shadow --ascii-lines --title "$LOG1" \
+    --tailboxbg $LOG1 $HEIGHT_ONE $WIDTH_ONE \
+    --and-widget \
+    --begin $(expr 2 + $HEIGHT_ONE) 1 --no-shadow --ascii-lines --title "$LOG2" \
+    --tailboxbg $LOG2 $HEIGHT_ONE $WIDTH_ONE \
+    --and-widget \
+    --begin $(expr 3 + $HEIGHT_ONE + $HEIGHT_ONE) 1 --no-shadow --ascii-lines --title "$LOG3" \
+    --tailboxbg $LOG3 $HEIGHT_ONE $WIDTH_ONE \
+    --and-widget \
+    --begin 0 0 --no-shadow --msgbox "" 1 1
+}
+
+auto_reload() {
+  log "Auto reloading uwsgi module ..."
+  inotifywait -m -e CLOSE_WRITE -r /var/lib/mediaplat/plugins/ |
+  while read DATA; do
+    echo $DATA | grep "[.]py$" >/dev/null 2>&1
+    if [ "$?" = 0 ]; then
+      echo $DATA
+      touch /var/run/mediaplat/uwsgi_reload
+    fi
+  done
+}
+
+case "$1" in
+  init)
+    init
+	;;
+  start)
+    shift
+    mediaplat_start $@
+	;;
+  stop)
+    mediaplat_stop
+	;;
+  restart|force-reload)
+    mediaplat_stop
+	mediaplat_start
+	;;
+  reload)
+    mediaplat_reload
+	;;
+  rebuild)
+    mediaplat_stop
+    mediaplat_rebuild
+	;;
+  update)
+    shift
+    update $@
+	;;
+  monitor)
+    monitor
+	;;
+  auto_reload)
+    auto_reload
+    ;;
+  *)
+    echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 3
+	;;
+esac

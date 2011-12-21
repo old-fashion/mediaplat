@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %} mediaplat {% endblock %}
+{% block header %}
+<link href="site_media/style.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+</script>
+{% endblock %}
+
+{% block progress %}
+<img src='site_media/images/progress.gif' width=18px height=18px style="verticalAlign=text-top;">
+{% endblock %}
+
+{% block status %}
+  <div id='path'>
+  {% for id, name in parents %}<a href="{{ cur_menu }}?id={{ id }}">{{ name }}</a>/{% endfor %}
+  </div>
+{% endblock %}
+
+{% block content %}
+  {% if view_mode == "on" %}
+    <br>
+    {% for row in rows %}
+	<div class="musicbox">
+	  <a href="{{ cur_menu }}?id={{ row.uid }}" title="{{ row.name }}">
+	  <img src="../file/thumbnail/{{ row.uid }}/medium" alt="{{ row.name }}" width=120 height=120 style="border:1px solid #C0C0C0;"></a>
+	  <div class="music_title">
+	  {{ row.audiotitle }}
+	  </div>
+	  <div class="music_desc">
+	  {{ row.audiodesc }}
+	  </div>
+	</div>
+    {% endfor %}
+	<div style="clear:both;">
+	</div>
+  {% else %}
+    {% if id != "audio" %}
+      {% include "folder_up.html" %}
+    {% else %}
+      <br>
+    {% endif %}
+    {% for row in rows %}
+      {% include "folder_item.html" %}
+    {% endfor %}
+  {% endif %}
+
+{% endblock %}
+

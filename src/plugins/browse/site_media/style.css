@@ -1,0 +1,338 @@
+/* mediaplat CSS document */
+
+body {background:#333; color:#0F0F0F; font:15px/20px Arial, Helvetica, sans-serif; margin:0; padding:0;}
+div, ul, h1, h2, h3, h4, li, p, img{margin:0; padding:0;}
+h2.feature-name { margin-bottom: 5px; }
+#page {width:800px; margin:0 auto; padding: 8px 20px 0 20px; background: #ffffff;}
+
+p {margin-bottom: 8px;}
+
+ul {list-style-type:none;}
+a { text-decoration: none; }
+a:hover {text-decoration: underline; }
+
+/* --- HEADER SECTION --- */
+/*#headerPanel {width:800px; height:80px; position:relative; margin:0 auto; padding:0;} */
+#headerPanel {width:800px; height:50px; margin:0 auto; padding:0;}
+#headerPanel img {z-index:1; padding:0; float: left;}
+
+#menubar {width: 490px; float: right;}
+#menubar li {float:right; font:16px/30px "Trebuchet MS",Arial, Helvetica, sans-serif; font-weight:bold;}
+#menubar li a {display:block; padding:0; color:#ababab; background:#fff; text-decoration:none; text-align:center; margin:0 15px 0 0; top:0px; left:0px;}
+#menubar li a:hover {text-decoration:none; color:#000000; border-bottom:3px solid #4BB248;}
+#menubar li.active {display:block; height:30px; color:#000000; text-align:center; margin:0 15px 0 0; border-bottom:3px solid #4BB248;}
+
+
+/* SUB MENU PANEL*/
+#submenu {height:26px;margin:10px 0 0; padding:0 29px 0 0; border-bottom:1px solid #FFFFFF;}
+#submenu li{float:right; font:12px/26px "Trebuchet MS",Arial, Helvetica, sans-serif;}
+#submenu li a{height:26px; display:block; padding:0; color:#555; background:#fff; text-decoration:none; text-align:center; margin:0 10px 0 10px; top:0px; left:0px;}
+#submenu li a:hover{height:26px;  color:#33CC00; text-decoration: underline;}
+#submenu li.subactive{display:block; height:26px; color:#000000; font-weight: bold; text-align:center; margin:0 10px 0 10px;}
+
+/* --- STATUS PANEL --- */
+#statusPanel {font:16px/24px "Trebuchet MS",Arial, Helvetica; color:#606060; font-weight:bold; width:800px; margin:0 15px 0 0; padding:0; text-align:right; vertical-align:text-top;}
+
+#path {
+  font: 16px "Trebuchet MS", Arial, Helvetica;
+  font-weight: bold; 
+  color: #303030;
+}
+#path a { color: #303030;  }
+#path a:visited { text-decoration: none; color: #303030; }
+#path a:hover { text-decoration: none; color: #303030; border-bottom: 2px solid #4BB248; }
+#path a:active { text-decoration: none; color: #303030; }
+
+/* --- BODY SECTION --- */
+#bodyPanel {width:800px; margin:0 auto; padding:0;}
+
+.box {
+  color:#606060;
+  border: 0px;
+  margin: 1px;
+  padding: 1px 5px 1px 5px;
+  border-bottom: 1px dotted #CCCCCC;
+  overflow: hidden;
+  clear: both;
+}
+
+.controlbox {
+  color:#606060;
+  border: 0px;
+  margin: 1px;
+  padding: 1px 5px 1px 5px;
+  border-bottom: 1px dotted #CCCCCC;
+  overflow: hidden;
+  text-align: right;
+  vertical-align: text-top;
+  font: 14px "Trebuchet MS", Arial, Helvetica;
+  clear: both;
+}
+
+#icon {
+  border: 0px;
+  margin: 1px 10px 1px 1px;
+  width: 36px;
+  height: 36px;
+  float: left;
+
+}
+
+#ricon {
+  border: 0px;
+  margin: 1px;
+  width: 36px;
+  height: 36px;
+  float: right;
+}
+
+#item {
+  padding: 1px 5px 1px 50px;
+}
+
+#text {
+  width: 700px;
+  max-width: 700px;
+  float: left;
+}
+
+#title {
+  text-decoration: none;
+  font: 18px "Trebuchet MS", Arial, Helvetica;
+  color: #303030;
+  margin: 0 0 2px 0;
+}
+
+#title_med {
+  text-decoration: none;
+  font: 16px "Trebuchet MS", Arial, Helvetica;
+  color: #303030;
+  margin: 0 0 2px 0;
+}
+
+#title a:hover {
+  text-decoration: none;
+  color: #303030;
+  border-bottom: 2px solid #4BB248;
+}
+
+#title a:link {
+  text-decoration: none;
+  color: #303030;
+}
+
+#title a:visited {
+  text-decoration: none;
+  color: #303030;
+}
+
+#desc {
+  font: 12px "Trebuchet MS", Arial, Helvetica; 
+  color: #808080;
+  float: left;
+}
+#rdesc {
+  font: 12px "Trebuchet MS", Arial, Helvetica; 
+  color: #808080;
+  float: right;
+}
+
+.confbox {
+  color:#606060;
+  border: 0px;
+  margin: 2px 20px 2px 40px;
+  padding: 1px 5px 1px 15px;
+  border-bottom: 1px dotted #CCCCCC;
+  overflow: hidden;
+  clear: both;
+}
+
+.confsection {
+  color:#606060;
+  border: 0px;
+  margin: 2px 20px 2px 20px;
+  padding: 1px 5px 1px 5px;
+  border-bottom: 2px solid #AAAAAA;
+  overflow: hidden;
+  clear: both;
+}
+
+.modulebox {
+  color:#606060;
+  border: 0px;
+  margin: 2px 20px 2px 40px;
+  padding: 1px 5px 1px 15px;
+  border-bottom: 1px dotted #CCCCCC;
+  overflow: hidden;
+  clear: both;
+}
+
+/* --- SEARCH SECTION --- */
+#searchPanel {width:800px; margin:0 auto; padding:0;}
+
+#search {
+  text-align: center;
+}
+
+.searchInput
+{
+  border: 4px solid #F00000;
+  margin: 7px;
+  padding: 2px 5px 2px 5px;
+  background: #F0F0F0;
+  font: 14px "Trebuchet MS", Arial, Helvetica;
+  font-size: 1.1em;
+  width: 250px;
+}
+
+#searchsection {
+  color: #808080;
+  border: 0px;
+  margin: 1px;
+  padding: 1px 5px 1px 5px;
+  border-bottom: 2px solid #AAAAAA;
+  font: 16px "Trebuchet MS", Arial, Helvetica;
+  font-weight: bold;
+  overflow: hidden;
+  clear: both;
+}
+
+#searched {
+  font-weight: bold;
+  background-color: yellow;
+}
+
+/* music */
+.musicbox {
+  width: 140px;
+  height: 175px;
+  max-height: 200px;
+  border: 1px;
+  margin: 10px;
+  color: #606060;
+  text-align: center;
+  overflow: hidden;
+  float: left;
+}
+
+.music_title {
+  font: 14px/16px "Trebuchet MS", Arial, Helvetica;
+  font-weight: bold;
+}
+
+.music_desc {
+  font: 12px/14px "Trebuchet MS", Arial, Helvetica;
+  color: #606060;
+}
+
+/* Button Reset */
+.button,
+.button a,
+.button button,
+.button input { font: "Trebuchet MS", Arial, Helvetica; position:relative; margin:0; display:-moz-inline-stack; display:inline-block; text-decoration:none !important; border:0; font-size:12px; font-family:Tahoma, Sans-serif; white-space:nowrap; background:url(images/buttonWhite.gif) no-repeat; overflow:visible; color:#333;}
+.button { height:23px; padding:0; vertical-align:middle; margin-right:2px; background-position:left top;}
+.button a,
+.button button,
+.button input{ Arial, Helvetica; left:2px; vertical-align:top; cursor:pointer;}
+/* Button Size */
+.button.large { height:29px; background-position:left -30px; }
+.button.small { height:18px; background-position:left -107px; }
+.button a,
+.button button,
+.button input { height:23px; padding:0 10px 0 8px; font-size:12px; line-height:23px; background-position:right top;}
+.button.large a,
+.button.large button,
+.button.large input { height:30px; padding:0 10px 0 8px; font-size:16px; line-height:29px; background-position:right -30px;}
+.button.small a,
+.button.small button,
+.button.small input { height:18px; padding:0 6px 0 4px; font-size:11px; line-height:18px; background-position:right -107px;}
+
+.textfield,
+.textfield input {
+  font: 14px "Trebuchet MS", Arial, Helvetica;
+}
+.searchfield,
+.searchfiedl input {
+  font: 16px "Trebuchet MS", Arial, Helvetica;
+}
+
+/* Button Text Color */
+.button *:hover,
+.button *:active,
+.button *:focus{ color:#690;}
+
+/* Button Text Strong */
+.button.strong * { font-weight:bold !important;}
+
+/* --- FOOTER SECTION --- */
+#footerPanel {
+  width:840px; 
+  height: 60px;  
+  margin: 20px 1px 20px 1px; 
+  color:#000; 
+  font-size:12px;
+}
+
+#navi {
+  font: 11px "Trebuchet MS", Arial, Helvetica;
+  margin: 2px;
+  text-align: center;
+}
+
+#version {
+  font: 11px "Trebuchet MS", Arial, Helvetica;
+  text-align: right;
+}
+
+img {border: 0;}
+
+.Gallery {
+  text-align: center;
+}
+
+.Gallery img {
+  padding: 4px;
+  border: 1px solid #F8F8F8;
+}
+
+.Gallery a {
+  margin-right: 5px;
+}
+ 
+/* Conf Section */
+#confText {
+  width: 250px;
+  max-width: 250px;
+  float: left;
+}
+
+.confInput
+{
+  border: 1px solid #CCCCCC;
+  margin: 7px;
+  padding: 2px 5px 2px 5px;
+  background: #F0F0F0;
+  font: "Trebuchet MS", Arial, Helvetica;
+  font-size: 1.1em;
+  width: 380px;
+}
+
+/* Conf Section */
+#moduleText {
+  width: 510px;
+  max-width: 510px;
+  float: left;
+}
+
+#moduleControl {
+  margin: 13px 10px 1px 1px;
+  float: left;
+}
+
+#log {
+  background: #F0F0F0;
+  margin: 10px 30px 10px 30px;
+  border: 1px dotted #CCCCCC;
+  padding: 5px;
+  font: 12px "Courier New" 
+}

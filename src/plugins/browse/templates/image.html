@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %} mediaplat {% endblock %}
+{% block header %}
+<link href="site_media/style.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="site_media/javascripts/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="site_media/javascripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="site_media/javascripts/fancybox/jquery.fancybox-1.3.4.css">
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".Gallery a").fancybox({
+      'titlePosition'       : 'over',
+      'showCloseButton'     : false,
+      'showNavArrows'       : true,
+      'autoScale'           : true
+    });
+	$("a#popup").fancybox({
+      'showCloseButton'     : false,
+	  'padding'				: 20
+	});
+    {% if single %}
+      $("#{{ id }}").trigger('click');
+    {% endif %}
+  });
+
+</script>
+{% endblock %}
+
+{% block progress %}
+<img src='site_media/images/progress.gif' width=18px height=18px style="verticalAlign=text-top;">
+{% endblock %}
+
+{% block status %}
+  <div id='path'>
+  {% for id, name in parents %}<a href="{{ cur_menu }}?id={{ id }}">{{ name }}</a>/{% endfor %}
+  </div>
+{% endblock %}
+
+{% block content %}
+  {% if view_mode == "on" %}
+    <br>
+	<div class="Gallery">
+    {% for row in rows %}
+	  <a id="{{ row.uid }}" href="../file/id/{{ row.uid }}/{{ row.name }}" rel="lightbox" title="{{ row.name }}">
+	  <img src="../file/thumbnail/{{ row.uid }}/medium" alt="{{ row.name }}" width={{ row.thumbnail_width }}px height={{ row.thumbnail_height }}px></a>
+    {% endfor %}
+	</div>
+    {% include "remote_play.html" %}
+  {% else %}
+    {% if id != "image" %}
+      {% include "folder_up.html" %}
+    {% else %}
+      <br>
+    {% endif %}
+    {% for row in rows %}
+      {% include "folder_item.html" %}
+    {% endfor %}
+  {% endif %}
+
+{% endblock %}
+

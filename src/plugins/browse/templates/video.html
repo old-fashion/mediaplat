@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %} mediaplat {% endblock %}
+{% block header %}
+<link href="site_media/style.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="site_media/javascripts/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="site_media/javascripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="site_media/javascripts/fancybox/jquery.fancybox-1.3.4.css">
+
+<script type="text/javascript" src="site_media/javascripts/mediaelement/mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" type="text/css" href="site_media/javascripts/mediaelement/mediaelementplayer.min.css">
+
+<script type="text/javascript">
+  $(document).ready(function() {
+	$("a#popup").fancybox({
+      'showCloseButton'     : false,
+	  'padding'				: 20
+	});
+
+    $("a#inline").fancybox({
+        'padding'               : 0,
+        'showCloseButton'       : false,
+        'autoScale'         	: true,
+        'scrolling'             : 'no',
+    });
+
+    $('audio,video').mediaelementplayer({
+      	success: function(player, node) {
+      		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+    	}
+  	});
+
+  });
+</script>
+{% endblock %}
+
+{% block progress %}
+<img src='site_media/images/progress.gif' width=18px height=18px style="verticalAlign=text-top;">
+{% endblock %}
+
+{% block status %}
+  <div id='path'>
+  {% for id, name in parents %}<a href="{{ cur_menu }}?id={{ id }}">{{ name }}</a>/{% endfor %}
+  </div>
+{% endblock %}
+
+{% block content %}
+<div style="display:none;">
+  {% for row in rows %}
+  <div id="{{ row.uid }}">
+    <video width="{{ row.video_width }}" height="{{ row.video_height }}" 
+	src="/file/path/{{ row.fullpath }}" type="video/mp4" id="player1" 
+    controls="controls" preload="none"></video>
+  </div>
+  {% endfor %}
+</div>
+
+  {% if view_mode == "on" %}
+    <br>
+	<div class="Gallery">
+    {% for row in rows %}
+	  <a id="inline" href="#{{ row.uid }}" title="{{ row.name }}">
+	  <img src="../file/thumbnail/{{ row.uid }}/medium" alt="{{ row.name }}" width=180 height=120></a>
+    {% endfor %}
+	</div>
+    {% include "remote_play.html" %}
+  {% else %}
+    {% if id != "video" %}
+      {% include "folder_up.html" %}
+    {% else %}
+      <br>
+    {% endif %}
+    {% for row in rows %}
+      {% include "folder_item.html" %}
+    {% endfor %}
+  {% endif %}
+
+{% endblock %}
+

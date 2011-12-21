@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} mediaplat {% endblock %}
+
+{% block status %}
+<ul id='submenu'>
+    {% for menu in submenu_list %}
+        {% if menu == submenu %}
+        <li class="subactive">{{ menu|capfirst }}</li>
+        {% else %}
+        <li><a href="{{ menu }}">{{ menu|capfirst }}</a></li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}

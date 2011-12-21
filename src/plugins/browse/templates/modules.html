@@ -1,0 +1,54 @@
+{% extends "setting.html" %}
+
+{% block content %}
+    <br>
+    <div class='confsection'>
+      <div id='text'>
+        <div id='title'> Modules Upload </div>
+      </div>
+    </div>
+    <div class='confbox'>
+      <div id='confText'>
+        <div id='title_med'> Module File </div>
+        <div id='desc'> Select module file for install </div>
+      </div>
+      <form action="/browse/modules" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <input type="file" name="file" class="confInput" />
+        <span class="button"><input type="submit" value="Upload" /></span>
+      </form>
+    </div>
+    <br>
+    <br>
+    {% for category, module in modules.items %}
+        <div class='confsection'>
+          <div id='text'>
+            <div id='title'> {{ category|capfirst }} </div>
+          </div>
+        </div>
+        {% for name, desc, is_activated in module %}
+        <div class='modulebox'>
+          <div id='icon'>
+              <img src='site_media/images/folder_up.png' width=36px height=36px>
+          </div>
+          <div id='moduleText'>
+            <div id='title_med'> {{ name|capfirst }}</div>
+            <div id='desc'> {{ desc|capfirst }}</div>
+          </div>
+          <div id='moduleControl'>
+          <form action="/browse/modules" method="post">{% csrf_token %}
+            <span class="button"><input type="submit" value="{% if is_activated %} Disable {% else %} Enable {% endif %}" /></span>
+            <input type="hidden" name="action" value="{% if is_activated %}activate{% else %}deactivate{% endif %}" />
+            <input type="hidden" name="module_name" value="{{ name }}" />
+          </form>
+          </div>
+          <div id='moduleControl'>
+          <form action="/browse/modules" method="post">{% csrf_token %}
+            <span class="button"><input type="submit" value="Remove" /></span>
+            <input type="hidden" name="action"  value="remove" />
+            <input type="hidden" name="plugin" value="{{ name }}" />
+          </form>
+          </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

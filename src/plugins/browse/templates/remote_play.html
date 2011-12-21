@@ -1,0 +1,19 @@
+    <div style="display:none"><div id='dialog' style="text-align:center;">
+	  <form action="{{ request.META.REQUEST_URI }}" method="post">{% csrf_token %}
+	  <select name="device_idx" style="width: 250px;">
+        {% for device in devices %}
+            <option value="{{forloop.counter0}}">{{ device }}</option>
+        {% endfor %}
+	  </select>
+	  <br>
+	  <br>
+	  <span class="button"><input type="submit" name="action" value="Start Play" /></span>
+	  &nbsp;&nbsp;
+      <input type="hidden" name="uid"  value="{{ id }}" />
+	  <span class="button"><input type="submit" name="action" value="Refresh Device" /></span>
+	  </form>
+    </div></div>
+    <div class=controlbox>
+      <a id="popup" href="#dialog"><img src='site_media/images/remote_play.png'></a>
+    </div>
+

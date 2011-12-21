@@ -1,0 +1,36 @@
+    <div class='box'>
+      <div id='icon'>
+	  {% if row.has_thumbnail %}
+	  <img src='../file/thumbnail/{{ row.uid }}/small' width=36px height=36px style="border:1px solid #C0C0C0;">
+	  {% else %}
+	    {% if row.type == "container" %}
+	    <img src='site_media/images/folder.png' width=36px height=36px >
+	    {% else %}
+	    <img src='site_media/images/item.png' width=36px height=36px >
+	    {% endif %}
+	  {% endif %}
+      </div>
+      <div id='text'>
+        <div id='title'>
+		  {% if cur_menu == "search" %}
+          <a href="{{ row.category }}?id={{ row.uid }}">{{ row.name|safe|escape }}</a>
+		  {% else %}
+	        {% if row.type == "container" %}
+              <a href="{{ cur_menu }}?id={{ row.uid }}">{{ row.name|safe|escape }}</a>
+	        {% else %}
+            <a href="../file/id/{{ row.uid }}/{{ row.linkname }}">{{ row.name|safe|escape }}</a>
+	        {% endif %}
+	      {% endif %}
+        </div>
+        <div id='desc'>
+		{{ row.desc }}
+        </div>
+        <div id='rdesc'>
+		{% if row.type != "container" %}
+          {{ row.size }}
+		{% endif %}  
+		&nbsp;&nbsp; {{ row.date }}
+        </div>
+      </div>
+    </div>
+

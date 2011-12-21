@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} mediaplat {% endblock %}
+
+{% block progress %}
+<img src='site_media/images/progress.gif' width=18px height=18px style="verticalAlign=text-top;">
+{% endblock %}
+
+{% block status %}
+<div>Total {{ total_item }}</div>
+{% endblock %}
+
+{% block content %}
+<div id='search'>
+<form action="{{ cur_menu }}?">
+  <span class="searchfield">
+  <input type="text" name="keyword" class="searchInput" />
+  </span>
+  <div id='search'>
+  <span class="button"><input type="submit" value="Search" /></span>
+  </div>
+</form>
+</div>
+{% if searched %}
+  {% for category, rows in categories.items %}
+    <br>
+    <div id='searchsection'>
+    {{ category|capfirst }}
+    </div>
+    {% for row in rows %}
+	  {% include "folder_item.html" %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+<div>
+</div>
+
+<br>
+<br>
+<div class='box'>
+</div>
+</div>
+{% endblock %}
