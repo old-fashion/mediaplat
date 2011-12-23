@@ -1,0 +1,4 @@
+.git
+inst
+*.tar.bz2
+postgresql-9.1.1

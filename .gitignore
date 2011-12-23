@@ -1,0 +1,8 @@
+.git
+.pythoscope
+*.pyc
+*.swp
+*.tar.bz2
+inst
+*.p
+tags

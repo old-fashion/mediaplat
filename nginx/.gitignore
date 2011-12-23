@@ -1,0 +1,4 @@
+.git
+inst
+*.tar.bz2
+nginx-1.0.9
